@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Bank — Astral Archive</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+  href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap"
+  rel="stylesheet"
+/>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     AUTH SCREEN
+     ════════════════════════════════════════════════ -->
+<div id="auth-screen">
+  <div class="auth-left">
+    <div class="auth-left-lines"></div>
+    <div class="auth-brand">
+      <div class="logo-mark">✧</div>
+      <h1>Welcome to the,<br /><em>Data Bank</em></h1>
+      <p>A centralized holographic archive for managing relics, records, and astral phenomena.</p>
+    </div>
+    <div class="auth-stats">
+      <div class="auth-stat">
+        <div class="stat-value-display" id="auth-stat-books">—</div>
+        <div class="stat-label-display">Books in catalog</div>
+      </div>
+      <div class="auth-stat">
+        <div class="stat-value-display" id="auth-stat-members">—</div>
+        <div class="stat-label-display">Registered members</div>
+      </div>
+      <div class="auth-stat">
+        <div class="stat-value-display" id="auth-stat-staff">—</div>
+        <div class="stat-label-display">Staff accounts</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-box">
+      <div class="auth-logo-row">
+        <div class="auth-logo-small">✧</div>
+        <span class="auth-logo-name">Data Bank</span>
+      </div>
+
+      <div class="auth-tabs" id="auth-tabs">
+        <div class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
+        <div class="auth-tab" onclick="switchAuthTab('signup')">Register</div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form">
+        <div class="auth-title">Welcome back</div>
+        <div class="auth-subtitle">Sign in to your account</div>
+        <div id="login-error" class="auth-error"></div>
+
+        <div class="role-selection-group">
+          <div class="form-label">Sign in as</div>
+          <div class="role-cards">
+            <div class="role-card selected" id="role-card-member" onclick="selectLoginRole('member')">
+              <div class="role-icon">👤</div>
+              <div class="role-name">Member</div>
+              <div class="role-description">Borrow &amp; reserve books</div>
+            </div>
+            <div class="role-card" id="role-card-admin" onclick="selectLoginRole('admin')">
+              <div class="role-icon">🛡️</div>
+              <div class="role-name">Admin</div>
+              <div class="role-description">Manage the library</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" id="login-email" placeholder="you@email.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input
+            class="form-input"
+            type="password"
+            id="login-password"
+            placeholder="••••••••"
+            onkeydown="if (event.key === 'Enter') handleLogin()"
+          />
+        </div>
+
+        <div class="demo-credentials-box">
+          <div class="demo-credentials-label">DEMO CREDENTIALS</div>
+          <div class="demo-credentials-text">
+            Admin: <span class="credential-gold">admin@lexis.edu</span> /
+            <span class="credential-gold">admin123</span><br />
+            Member: <span class="credential-teal">maria.santos@email.com</span> /
+            <span class="credential-teal">member123</span>
+          </div>
+        </div>
+
+        <button class="btn btn-gold btn-full" onclick="handleLogin()">Sign In →</button>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signup-form" style="display: none">
+        <div class="auth-title">Create account</div>
+        <div class="auth-subtitle">Register as a library member</div>
+        <div id="signup-error" class="auth-error"></div>
+        <div id="signup-success" class="auth-success"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="signup-first-name" placeholder="Juan" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" id="signup-last-name" placeholder="dela Cruz" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="signup-email" placeholder="juan@email.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-input" type="text" id="signup-phone" placeholder="09XXXXXXXXX" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Membership Type</label>
+          <select class="form-input" id="signup-membership-type">
+            <option value="Student">Student</option>
+            <option value="Faculty">Faculty</option>
+            <option value="Public">Public</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" id="signup-password" placeholder="Min 6 chars" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input class="form-input" type="password" id="signup-confirm-password" placeholder="Repeat" />
+          </div>
+        </div>
+        <button class="btn btn-gold btn-full" onclick="handleSignup()" style="margin-top: 8px">
+          Create Account →
+        </button>
+        <div class="divider"><span>already have an account?</span></div>
+        <button class="btn btn-ghost btn-full" onclick="switchAuthTab('login')">Sign In Instead</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     APP SCREEN
+     ════════════════════════════════════════════════ -->
+<div id="app-screen">
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-mark">✧</div>
+        <div class="sidebar-logo-text">
+          <div class="sidebar-app-name">Data Bank</div>
+          <div class="sidebar-app-tagline">Astral Archive</div>
+        </div>
+      </div>
+
+      <div class="sidebar-user-card">
+        <div class="sidebar-user-inner">
+          <div class="user-avatar" id="sidebar-avatar"></div>
+          <div class="user-info">
+            <div class="user-name" id="sidebar-name">—</div>
+            <div class="user-role" id="sidebar-role">—</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav"><!-- populated by JS --></nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-full btn-sm" onclick="handleLogout()">⎋ Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <header class="topbar">
+        <span class="topbar-title" id="topbar-title">Dashboard</span>
+        <div class="topbar-actions">
+          <div class="topbar-notification-bell" id="notification-bell-btn" title="Overdue alerts">
+            🔔<span class="notification-dot" id="notification-dot" style="display: none"></span>
+          </div>
+          <div class="topbar-divider"></div>
+          <div class="topbar-user-name" id="topbar-user-name">—</div>
+        </div>
+      </header>
+
+      <div class="main-content">
+        <div id="alert-area"></div>
+
+        <!-- ══ SUPABASE CONFIG BANNER ══ -->
+        <div id="supabase-config-banner" class="config-banner" style="display:none">
+          <div class="config-banner-inner">
+            <span class="config-banner-icon">⚠️</span>
+            <div>
+              <strong>Supabase not configured</strong> — Running in offline demo mode. To connect to a real database,
+              open <code>database.js</code> and set your <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code>.
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ ADMIN PAGES ════ -->
+
+        <!-- DASHBOARD -->
+        <div id="page-dashboard" class="page">
+          <div class="page-header">
+            <h2 id="dashboard-greeting">Dashboard</h2>
+            <p>Library overview and quick stats</p>
+          </div>
+          <div class="stats-row" id="admin-stats-row"></div>
+          <div class="grid-two-columns">
+            <div class="table-card">
+              <div class="table-card-header"><span class="table-card-title">Recent Loans</span></div>
+              <table>
+                <thead><tr><th>Member</th><th>Book</th><th>Status</th></tr></thead>
+                <tbody id="dashboard-recent-loans"></tbody>
+              </table>
+            </div>
+            <div class="table-card">
+              <div class="table-card-header"><span class="table-card-title">⚠ Overdue Loans</span></div>
+              <table>
+                <thead><tr><th>Member</th><th>Book</th><th>Due</th></tr></thead>
+                <tbody id="dashboard-overdue-loans"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOOKS -->
+        <div id="page-books" class="page">
+          <div class="page-header"><h2>Books</h2><p>Catalog management</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Books</span>
+              <div class="table-search-box">
+                <span class="search-icon">⌕</span>
+                <input id="book-search-input" placeholder="Search title or ISBN…" oninput="renderBooksTable()" />
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="openModal('book-modal')">+ Add Book</button>
+            </div>
+            <table>
+              <thead>
+                <tr><th>ISBN</th><th>Title</th><th>Author</th><th>Category</th><th>Year</th><th>Copies</th><th></th></tr>
+              </thead>
+              <tbody id="books-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AUTHORS -->
+        <div id="page-authors" class="page">
+          <div class="page-header"><h2>Authors</h2><p>Author records</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Authors</span>
+              <button class="btn btn-gold btn-sm" onclick="openModal('author-modal')">+ Add Author</button>
+            </div>
+            <table>
+              <thead><tr><th>Name</th><th>Nationality</th><th>Birth Year</th><th>Books</th><th></th></tr></thead>
+              <tbody id="authors-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MEMBERS ADMIN -->
+        <div id="page-members-admin" class="page">
+          <div class="page-header"><h2>Members</h2><p>Registered library members</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Members</span>
+              <div class="table-search-box">
+                <span class="search-icon">⌕</span>
+                <input id="member-search-input" placeholder="Search name or email…" oninput="renderMembersTable()" />
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="openModal('member-modal')">+ Add Member</button>
+            </div>
+            <table>
+              <thead>
+                <tr><th>Name</th><th>Email</th><th>Type</th><th>Expiry</th><th>Status</th><th></th></tr>
+              </thead>
+              <tbody id="members-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- LOANS ADMIN -->
+        <div id="page-loans-admin" class="page">
+          <div class="page-header"><h2>Loans</h2><p>Track all borrowing activity</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Loans</span>
+              <div class="table-search-box">
+                <span class="search-icon">⌕</span>
+                <input id="loan-search-input" placeholder="Search…" oninput="renderLoansTable()" />
+              </div>
+              <select class="form-input" id="loan-status-filter" onchange="renderLoansTable()" style="width:140px;padding:8px 12px;font-size:13px">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Overdue">Overdue</option>
+                <option value="Returned">Returned</option>
+              </select>
+              <button class="btn btn-gold btn-sm" onclick="openModal('loan-modal')">+ New Loan</button>
+            </div>
+            <table>
+              <thead>
+                <tr><th>Member</th><th>Book</th><th>Loan Date</th><th>Due Date</th><th>Returned</th><th>Status</th><th></th></tr>
+              </thead>
+              <tbody id="loans-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RESERVATIONS ADMIN -->
+        <div id="page-reservations-admin" class="page">
+          <div class="page-header"><h2>Reservations</h2><p>Book hold requests</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Reservations</span>
+              <button class="btn btn-gold btn-sm" onclick="openModal('reservation-modal')">+ New Reservation</button>
+            </div>
+            <table>
+              <thead>
+                <tr><th>Member</th><th>Book</th><th>Reserved</th><th>Expires</th><th>Status</th><th></th></tr>
+              </thead>
+              <tbody id="reservations-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FINES ADMIN -->
+        <div id="page-fines-admin" class="page">
+          <div class="page-header"><h2>Fines</h2><p>Overdue and damage fees</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Fines</span>
+              <button class="btn btn-gold btn-sm" onclick="openModal('fine-modal')">+ Add Fine</button>
+            </div>
+            <table>
+              <thead><tr><th>Member</th><th>Book</th><th>Amount</th><th>Reason</th><th>Status</th><th></th></tr></thead>
+              <tbody id="fines-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- STAFF -->
+        <div id="page-staff" class="page">
+          <div class="page-header"><h2>Staff</h2><p>Library personnel</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">Staff Accounts</span>
+              <button class="btn btn-gold btn-sm" onclick="openModal('staff-modal')">+ Add Staff</button>
+            </div>
+            <table>
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Hire Date</th><th></th></tr></thead>
+              <tbody id="staff-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REPORTS -->
+        <div id="page-reports" class="page">
+          <div class="page-header"><h2>Reports</h2><p>Library analytics and statistics</p></div>
+          <div class="stats-row" id="reports-stats-row"></div>
+          <div class="grid-two-columns">
+            <div class="table-card">
+              <div class="table-card-header"><span class="table-card-title">📊 Top Borrowed Books</span></div>
+              <table>
+                <thead><tr><th>Title</th><th>Author</th><th>Times Borrowed</th></tr></thead>
+                <tbody id="reports-top-books-body"></tbody>
+              </table>
+            </div>
+            <div class="table-card">
+              <div class="table-card-header"><span class="table-card-title">🏆 Most Active Members</span></div>
+              <table>
+                <thead><tr><th>Member</th><th>Type</th><th>Total Loans</th></tr></thead>
+                <tbody id="reports-top-members-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="table-card" style="margin-top:0">
+            <div class="table-card-header"><span class="table-card-title">📂 Books by Category</span></div>
+            <table>
+              <thead><tr><th>Category</th><th>Books</th><th>Total Loans</th><th>Available Copies</th></tr></thead>
+              <tbody id="reports-category-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="page-sql" class="page">
+          <div class="page-header"><h2>SQL Queries</h2><p>All required queries for the final project</p></div>
+
+          <!-- SQL COMMAND RUNNER -->
+          <div class="table-card" style="margin-bottom: 24px;">
+            <div class="table-card-header">
+              <span class="table-card-title">&#9889; SQL Command Runner</span>
+              <div style="display:flex;gap:8px;align-items:center">
+                <button class="btn btn-ghost btn-sm" onclick="getElement('sql-runner-input').value='';getElement('sql-runner-results').style.display='none'">Clear</button>
+                <button class="btn btn-gold btn-sm" onclick="executeLocalSQL()">Run Query &#9654;</button>
+              </div>
+            </div>
+            <div style="padding: 16px 20px;">
+              <div style="font-size:11px;color:var(--color-text-muted);margin-bottom:8px;letter-spacing:.04em">
+                Connected to in-memory AstralArchiveDB &mdash; click any query's <strong style="color:var(--color-gold)">Run &#9654;</strong> button to load &amp; execute it, or type your own below.
+              </div>
+              <textarea id="sql-runner-input"
+                style="width:100%;height:110px;background:#0a0a0c;color:#00f2ff;border:1px solid #1e1e24;border-radius:8px;padding:14px;font-family:'Share Tech Mono',monospace;font-size:13px;resize:vertical;box-sizing:border-box;outline:none"
+                placeholder="SELECT * FROM books WHERE publishyear > 2000;"></textarea>
+              <div id="sql-runner-results"
+                style="margin-top:12px;background:#070709;border:1px solid #1a1a20;border-radius:6px;padding:12px;font-family:'Share Tech Mono',monospace;display:none;overflow-x:auto;max-height:380px;overflow-y:auto">
+              </div>
+            </div>
+          </div>
+
+          <div id="sql-query-container"></div>
+        </div>
+
+        <!-- ════ MEMBER PAGES ════ -->
+
+        <!-- MEMBER HOME -->
+        <div id="page-member-home" class="page">
+          <div class="member-hero">
+            <div class="member-hero-avatar" id="member-avatar-hero"></div>
+            <div>
+              <div class="member-hero-name" id="member-hero-name">Welcome!</div>
+              <div class="member-hero-info" id="member-hero-info"></div>
+              <div class="member-hero-badges">
+                <span class="badge b-teal" id="member-hero-type"></span>
+                <span class="badge b-green" id="member-hero-status"></span>
+              </div>
+            </div>
+          </div>
+          <div class="stats-row member-stats-row">
+            <div class="stat-card">
+              <div class="stat-top">
+                <div><div class="stat-label">Active Loans</div></div>
+                <div class="stat-icon" style="background:var(--blue-dim);color:var(--blue)">📋</div>
+              </div>
+              <div class="stat-value" style="color:var(--blue)" id="member-stat-active-loans">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">
+                <div><div class="stat-label">Total Borrowed</div></div>
+                <div class="stat-icon" style="background:var(--teal-dim);color:var(--teal)">📚</div>
+              </div>
+              <div class="stat-value" style="color:var(--teal)" id="member-stat-total-loans">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">
+                <div><div class="stat-label">Unpaid Fines</div></div>
+                <div class="stat-icon" style="background:var(--red-dim);color:var(--red)">💰</div>
+              </div>
+              <div class="stat-value" style="color:var(--red)" id="member-stat-unpaid-fines">₱0</div>
+            </div>
+          </div>
+          <div class="grid-two-columns">
+            <div class="table-card">
+              <div class="table-card-header"><span class="table-card-title">📖 Currently Borrowed</span></div>
+              <table>
+                <thead><tr><th>Book</th><th>Due Date</th><th>Status</th></tr></thead>
+                <tbody id="member-active-loans-table"></tbody>
+              </table>
+            </div>
+            <div class="table-card">
+              <div class="table-card-header"><span class="table-card-title">🔖 My Reservations</span></div>
+              <table>
+                <thead><tr><th>Book</th><th>Reserved On</th><th>Status</th></tr></thead>
+                <tbody id="member-reservations-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEMBER BROWSE -->
+        <div id="page-member-browse" class="page">
+          <div class="page-header"><h2>Browse Catalog</h2><p>Discover and reserve books</p></div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <span class="table-card-title">All Books</span>
+              <div class="table-search-box">
+                <span class="search-icon">⌕</span>
+                <input id="browse-search-input" placeholder="Search title, author, ISBN…" oninput="renderBrowseCatalog()" />
+              </div>
+              <select class="form-input" id="browse-category-filter" onchange="renderBrowseCatalog()" style="width:150px;padding:8px 12px;font-size:13px">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+            <table>
+              <thead>
+                <tr><th>Title</th><th>Author</th><th>Category</th><th>Year</th><th>Availability</th><th></th></tr>
+              </thead>
+              <tbody id="browse-catalog-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MEMBER HISTORY -->
+        <div id="page-member-history" class="page">
+          <div class="page-header"><h2>Loan History</h2><p>Your borrowing activity</p></div>
+          <div class="table-card">
+            <div class="table-card-header"><span class="table-card-title">All Loans</span></div>
+            <table>
+              <thead>
+                <tr><th>Book</th><th>Loan Date</th><th>Due Date</th><th>Returned</th><th>Status</th></tr>
+              </thead>
+              <tbody id="member-loan-history-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MEMBER FINES -->
+        <div id="page-member-fines" class="page">
+          <div class="page-header"><h2>My Fines</h2><p>Outstanding and paid fees</p></div>
+          <div class="table-card">
+            <div class="table-card-header"><span class="table-card-title">Fine Records</span></div>
+            <table>
+              <thead><tr><th>Book</th><th>Amount</th><th>Reason</th><th>Status</th></tr></thead>
+              <tbody id="member-fines-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MEMBER PROFILE -->
+        <div id="page-member-profile" class="page">
+          <div class="page-header"><h2>My Profile</h2><p>Your account details</p></div>
+          <div class="table-card" style="max-width:600px">
+            <div class="table-card-header">
+              <span class="table-card-title">Account Information</span>
+              <button class="btn btn-gold btn-sm" onclick="openModal('profile-modal')">✎ Edit Profile</button>
+            </div>
+            <div style="padding:20px" id="profile-content"></div>
+          </div>
+        </div>
+
+      </div><!-- /.main-content -->
+    </div><!-- /.main-area -->
+  </div><!-- /.app-layout -->
+</div><!-- /#app-screen -->
+
+<!-- ════════════════════════════════════════════════
+     MODALS
+     ════════════════════════════════════════════════ -->
+
+<!-- BOOK MODAL -->
+<div class="modal-overlay" id="book-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="book-modal-title">Add Book</span>
+      <button class="modal-close-btn" onclick="closeModal('book-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="book-modal-id" value="0" />
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ISBN</label>
+          <input class="form-input" type="text" id="book-modal-isbn" placeholder="978-0000000000" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <input class="form-input" type="number" id="book-modal-year" placeholder="2024" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input class="form-input" type="text" id="book-modal-title-input" placeholder="Book title" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Author</label>
+          <select class="form-input" id="book-modal-author"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" id="book-modal-category"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Publisher</label>
+          <input class="form-input" type="text" id="book-modal-publisher" placeholder="Publisher name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Edition</label>
+          <input class="form-input" type="number" id="book-modal-edition" placeholder="1" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Total Copies</label>
+        <input class="form-input" type="number" id="book-modal-copies" placeholder="1" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('book-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveBook()">Save Book</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTHOR MODAL -->
+<div class="modal-overlay" id="author-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="author-modal-title">Add Author</span>
+      <button class="modal-close-btn" onclick="closeModal('author-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="author-modal-id" value="0" />
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="author-modal-first-name" placeholder="George" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="author-modal-last-name" placeholder="Orwell" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nationality</label>
+          <input class="form-input" type="text" id="author-modal-nationality" placeholder="British" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Birth Year</label>
+          <input class="form-input" type="number" id="author-modal-birth-year" placeholder="1903" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('author-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveAuthor('author-modal')">Save Author</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBER MODAL -->
+<div class="modal-overlay" id="member-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="member-modal-title">Add Member</span>
+      <button class="modal-close-btn" onclick="closeModal('member-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="member-modal-id" value="0" />
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="member-modal-first-name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="member-modal-last-name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="member-modal-email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" type="text" id="member-modal-phone" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Membership Type</label>
+        <select class="form-input" id="member-modal-type">
+          <option value="Student">Student</option>
+          <option value="Faculty">Faculty</option>
+          <option value="Public">Public</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Join Date</label>
+          <input class="form-input" type="date" id="member-modal-join-date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="date" id="member-modal-expiry-date" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('member-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveMember()">Save Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOAN MODAL -->
+<div class="modal-overlay" id="loan-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Loan</span>
+      <button class="modal-close-btn" onclick="closeModal('loan-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Member</label>
+        <select class="form-input" id="loan-modal-member"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Book</label>
+        <select class="form-input" id="loan-modal-book"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Processed by Staff</label>
+        <select class="form-input" id="loan-modal-staff"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Loan Date</label>
+          <input class="form-input" type="date" id="loan-modal-loan-date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Due Date</label>
+          <input class="form-input" type="date" id="loan-modal-due-date" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('loan-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveLoan()">Create Loan</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESERVATION MODAL -->
+<div class="modal-overlay" id="reservation-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Reservation</span>
+      <button class="modal-close-btn" onclick="closeModal('reservation-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Member</label>
+        <select class="form-input" id="reservation-modal-member"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Book</label>
+        <select class="form-input" id="reservation-modal-book"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Reservation Date</label>
+          <input class="form-input" type="date" id="reservation-modal-date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="date" id="reservation-modal-expiry" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('reservation-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveReservation()">Create Reservation</button>
+    </div>
+  </div>
+</div>
+
+<!-- FINE MODAL -->
+<div class="modal-overlay" id="fine-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Fine</span>
+      <button class="modal-close-btn" onclick="closeModal('fine-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Loan</label>
+        <select class="form-input" id="fine-modal-loan"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount (₱)</label>
+        <input class="form-input" type="number" id="fine-modal-amount" placeholder="25.00" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason</label>
+        <input class="form-input" type="text" id="fine-modal-reason" placeholder="e.g. Overdue 3 days" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('fine-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveFine()">Add Fine</button>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF MODAL -->
+<div class="modal-overlay" id="staff-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="staff-modal-title">Add Staff</span>
+      <button class="modal-close-btn" onclick="closeModal('staff-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="staff-modal-id" value="0" />
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="staff-modal-first-name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="staff-modal-last-name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="staff-modal-email" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-input" id="staff-modal-role">
+            <option value="Librarian">Librarian</option>
+            <option value="Assistant">Assistant</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hire Date</label>
+          <input class="form-input" type="date" id="staff-modal-hire-date" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('staff-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveStaff()">Save Staff</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Profile</span>
+      <button class="modal-close-btn" onclick="closeModal('profile-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="profile-modal-first-name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="profile-modal-last-name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" type="text" id="profile-modal-phone" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Address</label>
+        <input class="form-input" type="text" id="profile-modal-address" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('profile-modal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast-notification" class="toast-notification"></div>
+
+<!-- SCRIPTS — order matters: database first, then app logic -->
+<script src="database.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
